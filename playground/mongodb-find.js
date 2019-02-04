@@ -12,8 +12,8 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', {useNewUrlParser: true}
   const db = client.db('TodoApp');
 
   // db.collection('Todos').find({
-  //   // completed: false,
-  //   // _id: new ObjectID('5c56a2aa26a65d181825c22f'),
+    // completed: false,
+    // _id: new ObjectID('5c56a2aa26a65d181825c22f'),
   //   completed: true
   // }).toArray().then(collection => {
   //   console.log('Todos', collection);
