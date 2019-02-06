@@ -10,6 +10,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', {useNewUrlParser: true}
   console.log('Connected to mongoDB server');
 
   const db = client.db('TodoApp');
+
   // db.collection('Todos').insertOne({
   //   text: 'Something to do',
   //   completed: false
@@ -18,15 +19,15 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', {useNewUrlParser: true}
   //   console.log(result.ops);
   // });
   
-  db.collection('Users').insertOne({
+  // db.collection('Users').insertOne({
     // _id: 'asdf',
-    name: 'Ahmed',
-    age: 22,
-    location: 'Egypt'
-  }, (error, result) => {
-    if (error) console.log('Unable to insert to mongoDB database.');
-    else console.log(result.ops[0]._id.getTimestamp().toLocaleString());
-  });
-
+  //   name: 'Ahmed',
+  //   age: 22,
+  //   location: 'Egypt'
+  // }, (error, result) => {
+  //   if (error) console.log('Unable to insert to mongoDB database.');
+  //   else console.log(result.ops[0]._id.getTimestamp().toLocaleString());
+  // });
+  
   client.close();
 });
