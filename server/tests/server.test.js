@@ -28,6 +28,7 @@ describe('Post /todos', () => {
     .end((error, res) => {
       if (error) done(error);
       else {
+
         Todo.find().then((result) => {
           expect(result.length).toBe(1);
           expect(result[0].text).toBe(text);
@@ -35,6 +36,7 @@ describe('Post /todos', () => {
         }, error => {
           done(error);
         });
+        
       }
     });
 
