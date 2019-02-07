@@ -6,9 +6,10 @@ var request = require('supertest');
 var {app} = require('../server');
 var {Todo} = require('../models/todo');
 
+// Run before each test case
 beforeEach(done => {
-  Todo.deleteMany().then((result => {
-    // console.log(result);
+  Todo.deleteMany().then((todos => {
+    // console.log(todos);
     done();
   }));
 });
@@ -29,13 +30,11 @@ describe('Post /todos', () => {
       if (error) done(error);
       else {
 
-        Todo.find().then((result) => {
-          expect(result.length).toBe(1);
-          expect(result[0].text).toBe(text);
+        Todo.find().then((todos) => {
+          expect(todos.length).toBe(1);
+          expect(todos[0].text).toBe(text);
           done();
-        }, error => {
-          done(error);
-        });
+        }, error => done(error));
         
       }
     });
@@ -47,18 +46,33 @@ describe('Post /todos', () => {
     .post('/todos')
     .send({text: ''})
     .expect(400)
-    .end((error, result) => {
+    .end((error, todos) => {
       if (error) done(error);
       else {
-        Todo.find().then(result => {
-          expect(result.length).toBe(0);
+        Todo.find().then(todos => {
+          expect(todos.length).toBe(0);
           done();
         }, error => {
           // DONOT MAKE THIS MISTAKE AGAIN AND DONOT FORGET ERROR HANDLER
-          done();
+          done(error);
         });
       }
     });
+  });
+
+});
+
+
+describe('GET /todos', () => {
+
+  it('should return all todos', done => {
+    request(app)
+    .get('/todos')
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todos.length).toBe(0);
+    })
+    .end(done);
   });
 
 });
