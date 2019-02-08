@@ -22,7 +22,6 @@ var {User} = require('../server/models/user');
 // });
 
 
-User.findById('6c59056ca9feee14988641fa').then(user => {
-  if (!user) console.log('user not found');
-  else console.log(JSON.stringify({user}, undefined, 2));
-}, error => console.log(error));
+User.findById('kjlkj').then(user => {
+  console.log(user);
+}, error => console.log('Invalid data'));
