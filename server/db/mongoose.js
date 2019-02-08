@@ -5,7 +5,9 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 // Making the connection
-mongoose.connect('mongodb://localhost:27017/TodoApp', {
+// Require CC to push app up to heroku and get real database uri to get the job done
+var uri = `mongodb://localhost:27017/TodoApp`;
+mongoose.connect(uri, {
   useNewUrlParser: true
 });
 
