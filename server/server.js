@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 
 // Register handlers
 app.post('/todos', (req, res, next) => {
+
   // console.log(req.body);
   // Making todo
   var todo = new Todo({
@@ -32,6 +33,7 @@ app.post('/todos', (req, res, next) => {
 });
 
 app.get('/todos', (req, res) => {
+
   Todo.find().then(todos => {
     res.send({todos});
   }, error => {
@@ -42,23 +44,23 @@ app.get('/todos', (req, res) => {
 
 // NOTICE: use : to get inputs from the user via the uri
 app.get('/todos/:id', (req, res, next) => {
+
   var id = req.params.id;
   var isValid = ObjectID.isValid(id);
 
-  if (!isValid) {
-    return res.status(404).send();
-  }
+  if (!isValid) return res.status(404).send();
 
   Todo.findById(id).then((todo) => {
-    if (todo) res.send(todo);
+    if (todo) res.send({todo});
     else res.status(404).send();
   }, error => {
-    res.status(400).send({});
+    res.status(400).send();
   });
 
 });
 
 app.delete('/todos/:id', (req, res, next) => {
+
   var id = req.params.id;
   if (!ObjectID.isValid(id)) return res.status(404).send();
 
@@ -71,6 +73,7 @@ app.delete('/todos/:id', (req, res, next) => {
   }, error => {
     res.status(400).send();
   });
+
 });
 
 // Making the app listen to static port 3000

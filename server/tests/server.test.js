@@ -92,12 +92,14 @@ describe('GET /todos/:id', () => {
 
   it('should return todo document', done => {
 
+    var id = todoss[0]._id.toHexString();
+
     request(app)
-    .get(`/todos/${todoss[0]._id.toHexString()}`)
+    .get(`/todos/${id}`)
     .expect(200)
     .expect((res) => {
       // console.log(res.body._id, res.body._id.toHexString());
-      expect(res.body.text).toBe(todoss[0].text);
+      expect(res.body.todo.text).toBe(todoss[0].text);
     })
     .end(done);
 
@@ -121,5 +123,38 @@ describe('GET /todos/:id', () => {
     .end(done);
 
   })
+
+});
+
+
+describe('DELETE /todos/:d', () => {
+
+  it('should remove a todo', done => {
+
+    var id = todoss[0]._id.toHexString();
+
+    request(app)
+    .delete(`/todos/${id}`)
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo._id).toBe(id);
+    })
+    .end((error, res) => {
+
+      if (error) done(error);
+      else {
+        Todo.findById(id).then(todo => {
+          // console.log(todo);
+          // Asserts the given object is falsy.
+          expect(todo).toBeFalsy();
+          done();
+        }).catch(error => {
+          done(error);
+        });
+      }
+
+    });
+
+  });
 
 });
