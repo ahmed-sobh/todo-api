@@ -1,7 +1,9 @@
+// Loading third party modules
 var express = require('express');
 var bodyParser = require('body-parser');
 var {ObjectID} = require('mongodb');
 
+// Loading custom modules
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
@@ -38,6 +40,7 @@ app.get('/todos', (req, res) => {
 
 });
 
+// NOTICE: use : to get inputs from the user via the uri
 app.get('/todos/:id', (req, res, next) => {
   var id = req.params.id;
   var isValid = ObjectID.isValid(id);
