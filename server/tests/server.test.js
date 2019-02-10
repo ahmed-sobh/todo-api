@@ -11,7 +11,15 @@ var {Todo} = require('../models/todo');
 var todoss = [
   {
     text: 'Walk the dog',
-    _id: new ObjectID()
+    _id: new ObjectID(),
+    completed: false,
+    completedAt: null
+  },
+  {
+    text: 'Eat lunch',
+    _id: new ObjectID(),
+    completed: true,
+    completedAt: 123
   }
 ];
 
@@ -28,7 +36,7 @@ describe('Post /todos', () => {
 
   it('should create new todo', done => {
 
-    var text = 'Soemthing todo';
+    var text = 'Something todo';
     request(app)
     .post('/todos')
     .send({text})
@@ -41,8 +49,8 @@ describe('Post /todos', () => {
       else {
 
         Todo.find().then((todos) => {
-          expect(todos.length).toBe(2);
-          expect(todos[1].text).toBe(text);
+          expect(todos.length).toBe(3);
+          expect(todos[2].text).toBe(text);
           done();
         }, error => done(error));
         
@@ -60,7 +68,7 @@ describe('Post /todos', () => {
       if (error) done(error);
       else {
         Todo.find().then(todos => {
-          expect(todos.length).toBe(1);
+          expect(todos.length).toBe(2);
           done();
         }, error => {
           // DONOT MAKE THIS MISTAKE AGAIN AND DONOT FORGET ERROR HANDLER
@@ -76,13 +84,15 @@ describe('Post /todos', () => {
 describe('GET /todos', () => {
 
   it('should return all todos', done => {
+
     request(app)
     .get('/todos')
     .expect(200)
     .expect((res) => {
-      expect(res.body.todos.length).toBe(1);
+      expect(res.body.todos.length).toBe(2);
     })
     .end(done);
+
   });
 
 });
@@ -154,6 +164,57 @@ describe('DELETE /todos/:d', () => {
       }
 
     });
+
+  });
+
+});
+
+
+
+describe('PATCH /todos/:id', () => {
+
+  it('should update the todo', done => {
+
+    var hexId = todoss[0]._id.toHexString();
+
+    request(app)
+    .patch(`/todos/${hexId}`)
+    .send({
+      text: 'Go to gym',
+      completed: true
+    })
+    .expect(200)
+    .expect(res => {
+
+      var todo = res.body.todo;
+      expect(todo.text).not.toBe(todoss[0].text);
+      expect(todo.completed).toBe(true);
+      // expect(typeof todo.completedAt).toBeA('number');
+
+
+      if (typeof todo.completedAt !== 'number') {
+        throw new Error('completedAt not a number');
+      }
+
+    })
+    .end(done);
+
+  });
+
+  it('should clear completetAt when todo is not completed', done => {
+
+    var hexId = todoss[1]._id.toHexString();
+    request(app)
+    .patch(`/todos/${hexId}`)
+    .send({
+      completed: false
+    })
+    .expect(200)
+    .expect(res => {
+      expect(res.body.todo.text).toBe(todoss[1].text);
+      expect(res.body.todo.completedAt).toBe(null);
+    })
+    .end(done);
 
   });
 

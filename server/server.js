@@ -1,16 +1,16 @@
 // Loading third party modules
-var express = require('express');
-var bodyParser = require('body-parser');
-var {ObjectID} = require('mongodb');
-var _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
+const _ = require('lodash');
 
 // Loading custom modules
-var {mongoose} = require('./db/mongoose');
-var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
+const {mongoose} = require('./db/mongoose');
+const {Todo} = require('./models/todo');
+const {User} = require('./models/user');
 
-var app = express();
-var port = process.env.PORT || 3000;
+const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -19,7 +19,7 @@ app.post('/todos', (req, res, next) => {
 
   // console.log(req.body);
   // Making todo
-  var todo = new Todo({
+  const todo = new Todo({
     text: req.body.text
   });
 
@@ -46,8 +46,8 @@ app.get('/todos', (req, res) => {
 // NOTICE: use : to get inputs from the user via the uri
 app.get('/todos/:id', (req, res, next) => {
 
-  var id = req.params.id;
-  var isValid = ObjectID.isValid(id);
+  const id = req.params.id;
+  const isValid = ObjectID.isValid(id);
 
   if (!isValid) return res.status(404).send();
 
@@ -62,7 +62,7 @@ app.get('/todos/:id', (req, res, next) => {
 
 app.delete('/todos/:id', (req, res, next) => {
 
-  var id = req.params.id;
+  const id = req.params.id;
   if (!ObjectID.isValid(id)) return res.status(404).send();
 
   Todo.findByIdAndDelete(id).then(todo => {
@@ -80,10 +80,10 @@ app.delete('/todos/:id', (req, res, next) => {
 
 app.patch('/todos/:id', (req, res, next) => {
 
-  var id = req.params.id;
+  const id = req.params.id;
   // IMPORTAND: create an object from the picked object props IF EXIST!
-  var body = _.pick(req.body, ['text', 'completed']);
-  console.log(body);
+  const body = _.pick(req.body, ['text', 'completed']);
+  // console.log(body);
   if (!ObjectID.isValid(id)) return res.status(404).end();
   // console.log(completed, typeof completed);
 
