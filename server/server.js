@@ -1,3 +1,4 @@
+require('./config/config');
 // Loading third party modules
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,7 +11,7 @@ const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
@@ -65,6 +66,7 @@ app.delete('/todos/:id', (req, res, next) => {
   const id = req.params.id;
   if (!ObjectID.isValid(id)) return res.status(404).send();
 
+
   Todo.findByIdAndDelete(id).then(todo => {
     if (todo) res.send({todo});
     else {
@@ -106,6 +108,30 @@ app.patch('/todos/:id', (req, res, next) => {
   }, err => {
     res.status(400).send();
   });
+
+});
+
+app.post('/users', (req, res, next) => {
+
+  var body = _.pick(req.body, ['email', 'password']);
+
+  // Model creates and retrives documents
+  var user = new User(body);
+
+  // console.log(body, user);
+
+  // user gets validate before saving by method called (presave) and if a validation rule is violated save is aborted and the error is returned to the callback.
+  user.save()
+    .then(() => {
+      // console.log(user);
+      return user.generateAuthToken();
+    })
+    .then(token => {
+      res.header('x-auth', token).send(user);
+    })
+    .catch(error => {
+      res.status(400).send(error);
+    });
 
 });
 
